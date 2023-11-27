@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Books Page";
+}
+@model BooksFilterViewModel
+
+<!-- ================ start banner area ================= -->
+<section class="mt-4" style="height: 10px !important;">
+    <div class="container">
+        <h2>Explore books</h2>
+        <hr>
+    </div>
+</section>
+<!-- ================ end banner area ================= -->
+
+<!-- ================ category section start ================= -->
+    <section class="section-margin--small mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-5">
+                    <div class="sidebar-categories">
+                        <div class="head">Browse Categories</div>
+                        <ul class="main-categories">
+                            <li class="common-filter">
+                                    <ul>
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            string id = $"id{category.Id}";
+                                            <li class="filter-list">
+                                                <input asp-for="FilterModel.categoryId" value="@category.Id" class="pixel-radio" type="radio" id="@id" name="brand">
+                                                <label for="@id">@category.Name<span> (@category.Books.Count)</span></label>
+                                            </li>
+                                        }
+                                    </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-filter">
+                        <div class="top-filter-head">Product Filters</div>
+                        <div class="common-filter">
+                            <div class="head">Price</div>
+                            <div class="price-range-area">
+                                <div id="price-range"></div>
+                                <div class="value-wrapper d-flex">
+                                    <div class="price">Price:</div>
+                                    <span>$</span>
+                                    <div id="lower-value"></div>
+                                    <div class="to">to</div>
+                                    <span>$</span>
+                                    <div id="upper-value"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-8 col-md-7">
+                    
+                <form asp-controller="home" asp-action="filter" method="post">
+                    <!-- Start Filter Bar -->
+                    <div class="filter-bar d-flex flex-wrap align-items-center">
+                        <div class="sorting">
+                            <select  asp-for="FilterModel.sortType">
+                                <option value="1">Title</option>
+                                <option value="1">Price</option>
+                                <option value="1">Sells Count</option>
+                            </select>
+                        </div>
+                        <div class="sorting mr-auto">
+                            <select  asp-for="FilterModel.ascendingType">
+                                <option value="1">Ascending</option>
+                                <option value="1">Descending</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="input-group filter-bar-search">
+                                <input asp-for="FilterModel.searchText" type="text" placeholder="Search">
+                                <div class="input-group-append">
+                                    <button type="submit"><i class="ti-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                    <!-- End Filter Bar -->
+                    <!-- Start Best Seller -->
+                    <section class="lattest-product-area pb-40 category-list">
+                        <div class="row">
+                            @foreach( var book in Model.Books)
+                            {
+                                <div class="col-md-6 col-lg-4 col-xl-3">
+                                    <div class="card text-center card-product">
+                                        <div class="card-product__img">
+                                            @{
+                                                string source = $"~/uploads/{book.ImageUrl}";
+                                            }
+                                            <img style="height: 300px; object-fit:cover" class="card-img" asp-append-version="true" src="@source" alt="">
+                                            <ul class="card-product__imgOverlay">
+                                                <li><button><i class="ti-search"></i></button></li>
+                                                <li><button><i class="ti-shopping-cart"></i></button></li>
+                                                <li><button><i class="ti-heart"></i></button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-body">
+                                       
+                                            <h4 class="card-product__title"><a href="single-product.html">@book.Title</a></h4>
+                                            @{
+                                                var formatMoney = System.Globalization.CultureInfo.GetCultureInfo("uz-UZ");
+                                                var price = string.Format(formatMoney, "{0:c}", @book.Price);
+                                            }
+                                            <p class="card-product__price">@price</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </section>
+                    <!-- End Best Seller -->
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- ================ category section end ================= -->
